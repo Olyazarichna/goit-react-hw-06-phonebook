@@ -1,32 +1,42 @@
 import Contact from 'components/Contact/Contact';
 import css from './ContactList.module.css';
-import { useSelector, useDispatch } from 'react-redux';
-import { deleteContact } from 'redux/contactsSlice';
+import { useGetContactsQuery } from 'redux/contactsApi';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { deleteContact } from 'redux/contactsSlice';
 
 const ContactList = () => {
-  const contactItems = useSelector(state => state.contacts.items);
-  const filter = useSelector(state => state.contacts.filter);
+  const { data, error, isLoading } = useGetContactsQuery();
+  console.log('data', data);
 
-  const filterContacts = () => {
-    return contactItems.filter(contactItem => {
-      return contactItem.name.toLowerCase().includes(filter.toLowerCase());
-    });
-  };
+  console.log('error', error);
+  console.log('isLoading', isLoading);
+  // const contactItems = useSelector(state => state.contacts.items);
+  // const filter = useSelector(state => state.contacts.filter);
 
-  const dispatch = useDispatch();
+  // const filterContacts = () => {
+  //   return contactItems.filter(contactItem => {
+  //     return contactItem.name.toLowerCase().includes(filter.toLowerCase());
+  //   });
+  // };
+
+  // const dispatch = useDispatch();
   return (
     <ul className={css.contactList}>
-      {filterContacts().map(({ id, name, number }) => {
-        return (
-          <Contact
-            key={id}
-            id={id}
-            name={name}
-            number={number}
-            deleteContact={() => dispatch(deleteContact(id))}
-          />
-        );
-      })}
+      {data &&
+        data.map(contact => {
+          return (
+            <>
+              <Contact
+                key={contact.id}
+                name={contact.name}
+                number={contact.phone}
+              />
+            </>
+            // <li key={contact.id}>
+            //   {contact.name}: {contact.phone}
+            // </li>
+          );
+        })}
     </ul>
   );
 };
