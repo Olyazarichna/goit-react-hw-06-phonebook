@@ -1,13 +1,28 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import css from './ContactForm.module.css';
-import { useSelector, useDispatch } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
+import {
+  useAddContactMutation,
+  useGetContactsMutation,
+} from 'redux/contactsApi';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { addContact } from 'redux/contactsSlice';
 
 const ContactForm = () => {
-  const contactItems = useSelector(state => state.contacts.items);
+  const [addContact, result] = useAddContactMutation();
+  console.log(addContact);
 
-  const dispatch = useDispatch();
+  const handleAddContact = async values => {
+    try {
+      await addContact(values);
+      console.log('you add new contact');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // const contactItems = useSelector(state => state.contacts.items);
+
+  // const dispatch = useDispatch();
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -19,35 +34,35 @@ const ContactForm = () => {
     setNumber(event.target.value);
   };
 
-  const haveContacts = (contactItems, data) => {
-    return contactItems.some(
-      contactItem => contactItem.name.toLowerCase() === data.name.toLowerCase()
-    );
-  };
+  // const haveContacts = (contactItems, data) => {
+  //   return contactItems.some(
+  //     contactItem => contactItem.name.toLowerCase() === data.name.toLowerCase()
+  //   );
+  // };
 
-  const onHandleSubmit = event => {
-    event.preventDefault();
-    const id = nanoid(5);
-    const contact = {
-      id: id,
-      name: name,
-      number: number,
-    };
-    if (!haveContacts(contactItems, contact)) {
-      dispatch(addContact(contact));
-      reset();
-    } else {
-      alert(`${contact.name} is already exist`);
-      reset();
-    }
-  };
-  const reset = () => {
-    setName('');
-    setNumber('');
-  };
+  // const onHandleSubmit = event => {
+  //   event.preventDefault();
+  //   const id = nanoid(5);
+  //   const contact = {
+  //     id: id,
+  //     name: name,
+  //     number: number,
+  //   };
+  //   if (!haveContacts(contactItems, contact)) {
+  //     dispatch(addContact(contact));
+  //     reset();
+  //   } else {
+  //     alert(`${contact.name} is already exist`);
+  //     reset();
+  //   }
+  // };
+  // const reset = () => {
+  //   setName('');
+  //   setNumber('');
+  // };
 
   return (
-    <form onSubmit={onHandleSubmit} className={css.form}>
+    <form onSubmit={handleAddContact} className={css.form}>
       <label>
         Name
         <input
