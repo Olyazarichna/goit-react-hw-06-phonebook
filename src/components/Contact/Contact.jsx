@@ -1,17 +1,13 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import css from './Contact.module.css';
-import { useDeleteContactMutation } from 'redux/contactsApi';
 
-const Contact = contact => {
-  const [deleteContact, result] = useDeleteContactMutation();
-  console.log('id', contact.id);
-
+const Contact = ({ id, name, number, deleteContact }) => {
   return (
     <li className={css.listItem}>
-      {contact.name}: {contact.number}
+      {name}: {number}
       <button
         type="button"
-        onClick={() => deleteContact(contact.id)}
+        onClick={() => deleteContact(id)}
         className={css.bthList}
       >
         Delete
@@ -22,9 +18,9 @@ const Contact = contact => {
 
 export default Contact;
 
-// Contact.propTypes = {
-//   id: PropTypes.string,
-//   name: PropTypes.string.isRequired,
-//   number: PropTypes.string.isRequired,
-//   deleteContact: PropTypes.func.isRequired,
-// };
+Contact.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
+  deleteContact: PropTypes.func.isRequired,
+};
